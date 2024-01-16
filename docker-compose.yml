@@ -1,0 +1,42 @@
+version: '3.5'
+
+services:
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+
+  hotel-db:
+    image: mysql
+    container_name: hotel-mysql-v1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456789x@X"
+      MYSQL_DATABASE: nokia_training
+      MYSQL_USER: hotelNokia
+      MYSQL_PASSWORD: "1234567890x@X"
+    ports:
+      - 3306:3306  # Correct port for MySQL
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend
+
+  hotel-be:
+    image: hotel-be:v1
+    ports:
+      - "5000:5000"
+    restart: always
+    depends_on:
+      - hotel-db
+    networks:
+      - backend
+
+volumes:
+  db-data:
+
+networks:
+  backend:
